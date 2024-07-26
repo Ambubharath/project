@@ -11,6 +11,12 @@ import ListItemText from '@mui/material/ListItemText';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
 
 const MenuButton = styled(IconButton)(({ theme }) => ({
   marginRight: theme.spacing(2),
@@ -21,11 +27,51 @@ const MenuButton = styled(IconButton)(({ theme }) => ({
 
 const drawerWidth = 240;
 
+const CustomDialog = styled(Dialog)(({ theme }) => ({
+  '& .MuiPaper-root': {
+    background: 'linear-gradient(45deg, #2196f3, #9c27b0)',
+    color: '#fff',
+  },
+}));
+
+const CustomDialogTitle = styled(DialogTitle)(({ theme }) => ({
+  fontFamily: 'Roboto, sans-serif',
+  fontWeight: 700,
+}));
+
+const CustomDialogContent = styled(DialogContent)(({ theme }) => ({
+  fontFamily: 'Roboto, sans-serif',
+  fontWeight: 400,
+}));
+
+const CustomDialogActions = styled(DialogActions)(({ theme }) => ({
+  '& .MuiButton-root': {
+    color: '#fff',
+    fontFamily: 'Roboto, sans-serif',
+    fontWeight: 500,
+  },
+}));
+
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [logoutDialogOpen, setLogoutDialogOpen] = React.useState(false);
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
+  };
+
+  const handleLogoutClick = () => {
+    setLogoutDialogOpen(true);
+  };
+
+  const handleLogoutConfirm = () => {
+    setLogoutDialogOpen(false);
+    // Add your logout logic here
+    console.log("User logged out");
+  };
+
+  const handleLogoutCancel = () => {
+    setLogoutDialogOpen(false);
   };
 
   return (
@@ -79,11 +125,32 @@ const Navbar = () => {
           <ListItem button sx={{ fontFamily: 'Roboto, sans-serif', fontWeight: 400 }}>
             <ListItemText primary="Events" />
           </ListItem>
-          <ListItem button sx={{ fontFamily: 'Roboto, sans-serif', fontWeight: 400 }}>
+          <ListItem button onClick={handleLogoutClick} sx={{ fontFamily: 'Roboto, sans-serif', fontWeight: 400 }}>
             <ListItemText primary="Logout" />
           </ListItem>
         </List>
       </Drawer>
+
+      {/* Logout Confirmation Dialog */}
+      <CustomDialog
+        open={logoutDialogOpen}
+        onClose={handleLogoutCancel}
+      >
+        <CustomDialogTitle>{"Confirm Logout"}</CustomDialogTitle>
+        <CustomDialogContent>
+          <DialogContentText>
+            Are you sure you want to log out?
+          </DialogContentText>
+        </CustomDialogContent>
+        <CustomDialogActions>
+          <Button onClick={handleLogoutCancel} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleLogoutConfirm} color="primary" autoFocus>
+            Logout
+          </Button>
+        </CustomDialogActions>
+      </CustomDialog>
 
       {/* Content outside Drawer */}
       <Box sx={{ ml: drawerOpen ? drawerWidth : 0, mt: 2, transition: 'margin-left 0.3s ease' }}>
